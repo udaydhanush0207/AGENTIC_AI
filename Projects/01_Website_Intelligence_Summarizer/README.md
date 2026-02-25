@@ -1,55 +1,181 @@
-# Website Intelligence Summarizer (LLM Prototype)
+# Website Summarization with OpenAI 
 
-## Overview
-This project demonstrates a structured LLM pipeline that transforms a public website into a clean, structured business intelligence summary.
+This notebook documents my hands-on build of a simple LLM application: a **website summarizer** that fetches content from a public URL and generates a structured summary using OpenAI’s Chat Completions API.
 
-It uses OpenAI’s Chat Completions API to:
+The goal was to demonstrate practical LLM engineering fundamentals:
+- environment setup
+- secure API usage
+- role-based prompt design
+- message construction
+- calling the model and parsing the response
 
-- Extract key company services
-- Identify project examples
-- Explain acronyms (CIP, HUB, etc.)
-- Provide structured, readable Markdown output
-- Present business context for first-time readers
+---
 
-This project is designed as a prototype LLM application and is not deployed publicly.
+## What I Built
 
-***
+**Input:** a website URL (example used: Front Line Advisory Group website)  
+**Process:**
+1. Fetch the visible website contents (`[redacted]_contents(url)`)
+2. Construct a message payload in OpenAI's chat format (system + user)
+3. Call the OpenAI Chat Completions API
+4. Parse the response and display as Markdown
 
-## Why This Project
-The goal was to build a clean LLM-powered summarization workflow while practicing:
+**Output:** a structured summary including:
+- what the company does
+- services and project examples
+- acronyms explained (e.g., CIP, HUB)
+- readable formatting with headings and bullet points
 
-- Role-based prompt design (system vs user)
-- Modular message construction
-- API-based LLM interaction
-- Structured Markdown output
-- Real-world website data injection
+---
 
-***
+## Tools / Stack Used
 
-## Architecture
+- **Git + GitHub** (version control, project tracking)
+- **PowerShell** (local setup + commands)
+- **Cursor IDE** (project navigation + coding workflow)
+- **Jupyter Notebook (.ipynb)** (experimentation + execution)
+- **OpenAI Python SDK** (`openai.chat.completions.create`)
+- **Prompt Engineering** (system + user prompts, structured output)
 
-### Input
-- Public website URL
+---
 
-### Pipeline
-1. Retrieve website contents
-2. Construct structured prompt messages
-3. Send to Chat Completions API
-4. Parse structured JSON response
-5. Render formatted Markdown output
+## What I Did (Step-by-Step)
 
-### Output
-- Executive summary
-- Services breakdown
-- Project scale
-- Acronym explanation
-- Practical interpretation
+### 1) Repo Setup
+- Installed Git
+- Cloned the course/project repository using HTTPS
+- Opened the project locally (Projects folder)
+- Opened the repo inside Cursor IDE
 
-***
+**Why this matters:**
+- Git documents real work and progress  
+- Cloning ensures I’m working from a consistent codebase  
 
-## Key Concepts Demonstrated
-- System vs User prompt separation
-- Controlled LLM behavior via instruction design
-- Dynamic message construction (`messages_for()`)
-- API response parsing
-- Context injection
+---
+
+### 2) API Setup (Securely)
+- Generated an OpenAI API key
+- Stored it locally as an environment variable / `.env` (not committed)
+
+**Why the API key is secret:**
+- Anyone with the key can spend credits from my account  
+- Keys must never be hardcoded or pushed to GitHub  
+- Proper secret handling is a production requirement  
+
+---
+
+### 3) Website Fetch + Summarization
+- Pulled website content with `[redacted]_contents(url)`
+- Built prompt + message payload using a `messages_for()` function
+- Called the model using:
+
+```python
+response = openai.chat.completions.create(
+    model="gpt-4.1-mini",
+    messages=messages
+)
+```
+## Parsed the model output using:
+response.choices[0].message.content
+
+
+## System message (behavior)
+Defines how the assistant should behave (format, tone, structure, constraints).
+
+## User message (task + input)
+Provides the request and the website content.
+
+### This structure is important because:
+- it gives repeatable behavior
+- it keeps instructions separate from the data
+- it’s the standard format for production chat-based LLM applications
+---
+
+# Why the Message Format Looks Like This
+
+OpenAI chat models expect a list of messages like:
+```python
+[
+  {"role": "system", "content": "..."},
+  {"role": "user", "content": "..."}
+]
+```
+
+# Why I Used `messages_for()` (Modularity)
+
+I created a helper function:
+```python
+def messages_for(website):
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt + website}
+    ]
+```
+
+### Why:
+- keeps prompts reusable and clean
+- makes it easy to summarize any website by swapping the input
+- matches how LLM apps are structured in real projects (separation of prompt + runtime input)
+
+---
+
+# API Cost / Credits (What I Learned)
+
+This notebook is not deployed publicly because:
+- every run calls a paid API
+- website text can be large → more tokens → higher cost
+
+### Costs depend on:
+- website length (tokens)
+- model selection
+- number of calls
+
+### To control cost in real systems, you typically add:
+- token limits
+- chunking
+- caching
+- rate limiting
+
+(Those are later-stage improvements. This notebook focuses on correct fundamentals.)
+
+---
+
+# Results (Example)
+
+Example URL tested: https://www.walmart.com/
+
+The model produced a structured summary including:
+- company overview
+- services breakdown
+- project examples and scale
+- acronyms explained
+- practical interpretation for a first-time visitor
+
+---
+
+# Security Notes
+
+✅ API keys are stored locally and not included in this repo  
+✅ `.env` is not uploaded  
+✅ No secrets are committed  
+
+---
+This isn’t “just a notebook.”
+
+It demonstrates that I can:
+- set up an AI dev environment cleanly
+- securely use LLM APIs
+- structure prompts for consistent output
+- build small, working LLM applications end-to-end
+- understand cost/security tradeoffs (API keys + tokens)
+
+---
+
+# Author
+
+**Venkat Satya Uday Dhanush Karri**  
+Focus: LLM systems, RAG, Agentic workflows, production AI engineering
+
+---
+
+
