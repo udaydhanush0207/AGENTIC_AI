@@ -1,41 +1,55 @@
-# Website Intelligence Summarizer (LLM App)
+# Website Intelligence Summarizer (LLM Prototype)
 
 ## Overview
-This project takes a public website URL, extracts the visible content, and uses an LLM to generate a structured summary designed for fast understanding.
+This project demonstrates a structured LLM pipeline that transforms a public website into a clean, structured business intelligence summary.
 
-It outputs:
-- What the company does
-- Core services
-- Project examples (if available)
-- Acronyms explained (CIP, HUB, etc.)
-- Practical interpretation for a first-time visitor
+It uses OpenAI’s Chat Completions API to:
+
+- Extract key company services
+- Identify project examples
+- Explain acronyms (CIP, HUB, etc.)
+- Provide structured, readable Markdown output
+- Present business context for first-time readers
+
+This project is designed as a prototype LLM application and is not deployed publicly.
+
+***
+
+## Why This Project
+The goal was to build a clean LLM-powered summarization workflow while practicing:
+
+- Role-based prompt design (system vs user)
+- Modular message construction
+- API-based LLM interaction
+- Structured Markdown output
+- Real-world website data injection
+
+***
 
 ## Architecture
-**Input:** Website URL  
-**Pipeline:**
-1) Fetch website contents  
-2) Build structured messages (system + user)  
-3) Call Chat Completions API  
-4) Parse response  
-5) Render Markdown summary
 
-**Output:** Structured, readable summary
+### Input
+- Public website URL
 
-## Key Engineering Concepts Demonstrated
-- Role-based prompt design (system vs user)
-- Modular message construction (`messages_for()`)
-- JSON response parsing (`response.choices[0].message.content`)
-- Clean separation of prompts and execution logic
+### Pipeline
+1. Retrieve website contents
+2. Construct structured prompt messages
+3. Send to Chat Completions API
+4. Parse structured JSON response
+5. Render formatted Markdown output
 
-## Setup
-1) Create a virtual environment
-2) Install dependencies
-3) Add your API key
+### Output
+- Executive summary
+- Services breakdown
+- Project scale
+- Acronym explanation
+- Practical interpretation
 
-### Requirements
-- Python 3.12+
-- OpenAI-compatible API key
+***
 
-### Install
-```bash
-pip install -r requirements.txt
+## Key Concepts Demonstrated
+- System vs User prompt separation
+- Controlled LLM behavior via instruction design
+- Dynamic message construction (`messages_for()`)
+- API response parsing
+- Context injection
